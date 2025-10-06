@@ -1943,7 +1943,7 @@
           "description": "Конкатенация: {bot_id}_{iris_token}",
           "schema": {
             "type": "string",
-            "example": "523232275118_SEibvWeRCDDSAASADA7TfzyOe4m6o"
+            "example": "12345_abcdEFGH"
           }
         }
       ],
@@ -1962,7 +1962,19 @@
         }
       }
     },
-    "/last_version": {
+    "/{token}/last_version": {
+      "parameters": [
+        {
+          "name": "token",
+          "in": "path",
+          "required": true,
+          "description": "Конкатенация: {bot_id}_{iris_token}",
+          "schema": {
+            "type": "string",
+            "example": "12345_abcdEFGH"
+          }
+        }
+      ],
       "get": {
         "tags": ["Other"],
         "summary": "Получить текущую версию API Iris",

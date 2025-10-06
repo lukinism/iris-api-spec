@@ -1389,7 +1389,7 @@ paths:
         description: 'Конкатенация: {bot_id}_{iris_token}'
         schema:
           type: string
-          example: 52913131118_SEibvWeRC19iRDADADADADADAvu7TfzyOe4m6o
+          example: 12345_abcdEFGH
     get:
       tags:
         - Other
@@ -1401,7 +1401,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IrisAgentsResponse'
-  /last_version:
+  /{token}/last_version:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
     get:
       tags:
         - Other

@@ -9,7 +9,7 @@
     - [pocket/sweets/history](#pocketsweetshistory)
     - [pocket/gold/history](#pocketgoldhistory)
     - [pocket/donate_score/history](#pocketdonate_scorehistory)
-    - [pocket/enable / disable / allow_all / deny_all](#pocketenable--disable--allow_all--deny_all)
+    - [pocket/enable / disable / allow_all / deny_all](#pocketenable--pocketdisable--pocketallow_all--pocketdeny_all)
     - [pocket/allow_user](#pocketallow_user)
 - [👤 Методы User Info](#-методы-user-info)
     - [user_info/reg](#user_inforeg)

@@ -1,0 +1,1415 @@
+openapi: 3.0.3
+info:
+  title: Iris Sweets API
+  version: 0.0.1
+  description: OpenAPI-схема IRIS API
+servers:
+  - url: https://iris-tg.ru/api/v0.3
+    description: Основное API (передавайте {token} в пути)
+  - url: https://iris-tg.ru
+    description: Публичные данные биржи (стакан, сделки)
+tags:
+  - name: Pocket
+    description: Мешок, переводы, донат-очки и история
+  - name: UserInfo
+    description: Информация о пользователях
+  - name: Updates
+    description: Получение событий/обновлений
+  - name: Trade
+    description: Торговля и публичные рыночные данные
+  - name: Other
+    description: Системные данные Ирис (агенты и т.п.)
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: invalid user_id
+      required:
+        - code
+        - message
+    OkResponse:
+      type: object
+      properties:
+        result:
+          type: boolean
+          enum:
+            - true
+            - false
+          example: true
+    Balance:
+      type: object
+      properties:
+        gold:
+          type: number
+          format: float
+          example: 123.45
+        sweets:
+          type: number
+          format: float
+          example: 678.9
+        donate_score:
+          type: number
+          format: integer
+          example: 94
+      required:
+        - gold
+        - sweets
+        - donate_score
+      additionalProperties: false
+    GiveResult:
+      type: object
+      properties:
+        result:
+          type: integer
+          example: 987654321
+      required:
+        - result
+    History:
+      type: object
+      properties:
+        date:
+          type: integer
+          format: int64
+          example: 1759543048000
+        amount:
+          type: number
+          format: float
+          example: -1.05
+        balance:
+          type: number
+          format: float
+          example: 0.74
+        to_user_id:
+          type: integer
+          example: 271826548
+        details:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 1
+            amount:
+              type: integer
+              example: 1
+            fee:
+              type: number
+              example: 0.05
+            donate_score:
+              type: number
+              example: 0
+        id:
+          type: number
+          example: 31402848
+        type:
+          type: string
+          enum:
+            - send
+            - receive
+            - trade
+            - dividends
+            - trade_sale_order
+            - send_with
+          example: send
+        peer_id:
+          type: number
+          example: 271826548
+      required:
+        - date
+        - amount
+        - balance
+        - to_user_id
+        - id
+        - type
+        - peer_id
+    HistoryDonateScoreItem:
+      type: object
+      properties:
+        date:
+          type: integer
+          format: int64
+          example: 1759543048000
+        amount:
+          type: number
+          format: int
+          example: -10
+        balance:
+          type: number
+          format: integer
+          example: 1
+        id:
+          type: number
+          format: integer
+          example: 42
+        type:
+          type: string
+          enum:
+            - send
+            - send_with
+            - receive
+            - receive_with
+          example: send
+        peer_id:
+          type: number
+          example: 271826548
+      required:
+        - date
+        - amount
+        - balance
+        - id
+        - type
+        - peer_id
+    HistoryDonateScore:
+      type: array
+      items:
+        $ref: '#/components/schemas/HistoryDonateScoreItem'
+      example:
+        - date: 1759554646000
+          amount: -1
+          balance: 299
+          id: 8916541
+          type: send
+          peer_id: 271826548
+    HistoryItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        ts:
+          type: string
+          format: date-time
+          example: '2025-09-21T10:00:00Z'
+        type:
+          type: string
+          example: give
+        amount:
+          type: number
+          format: float
+          example: 10
+        user_id:
+          type: integer
+          example: 123456789
+        comment:
+          type: string
+          example: спасибо
+      additionalProperties: true
+    HistoryResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/History'
+    UserActivityResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/UserActivityItem'
+    UserActivityItem:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 17002
+        week:
+          type: integer
+          example: 88
+        month:
+          type: integer
+          example: 158
+        day:
+          type: integer
+          example: 2
+      required:
+        - total
+        - week
+        - month
+        - day
+    UserStarsResponse:
+      type: object
+      properties:
+        result:
+          type: integer
+          example: 1775
+          format: int64
+      required:
+        - result
+    UserRegResponse:
+      type: object
+      properties:
+        result:
+          type: integer
+          example: 1586842128000
+          format: int64
+      required:
+        - result
+    UserPocketResponse:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            gold:
+              type: integer
+              example: 3
+              description: Количество голды
+            coins:
+              type: integer
+              example: 393
+              description: Количество коинов
+            sweets:
+              type: number
+              format: float
+              example: 6.74
+              description: Количество ирисок
+            stars:
+              type: integer
+              example: 0
+              description: Количество звёзд
+          required:
+            - gold
+            - coins
+            - sweets
+            - stars
+          additionalProperties: false
+      required:
+        - result
+      example:
+        result:
+          gold: 3
+          coins: 393
+          sweets: 6.74
+          stars: 0
+    SpamCheckResponse:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            is_spam:
+              type: boolean
+              example: false
+            is_ignore:
+              type: boolean
+              example: false
+            is_scam:
+              type: boolean
+              example: false
+          required:
+            - is_spam
+            - is_ignore
+            - is_scam
+          additionalProperties: false
+      required:
+        - result
+      example:
+        result:
+          is_spam: false
+          is_ignore: false
+          is_scam: false
+    TradeBuyResponse:
+      oneOf:
+        - type: object
+          properties:
+            done_volume:
+              type: integer
+              example: 1
+            sweets_spent:
+              type: number
+              format: float
+              example: 1.74
+          required:
+            - done_volume
+            - sweets_spent
+          additionalProperties: false
+          example:
+            done_volume: 1
+            sweets_spent: 1.74
+        - type: object
+          properties:
+            done_volume:
+              type: integer
+              example: 0
+              description: Сколько объёма реально куплено
+            sweets_spent:
+              type: number
+              format: float
+              example: 0
+              description: Сколько ирисок потрачено
+            new_order:
+              type: object
+              properties:
+                volume:
+                  type: integer
+                  example: 1
+                  description: Объём нового ордера
+                price:
+                  type: number
+                  format: float
+                  example: 1
+                  description: Цена ордера
+                id:
+                  type: integer
+                  example: 990866
+                  description: ID ордера
+              required:
+                - volume
+                - price
+                - id
+              additionalProperties: false
+          required:
+            - done_volume
+            - sweets_spent
+            - new_order
+          additionalProperties: false
+          example:
+            done_volume: 0
+            sweets_spent: 0
+            new_order:
+              volume: 1
+              price: 1
+              id: 990866
+    TradeSellResponse:
+      oneOf:
+        - type: object
+          properties:
+            done_volume:
+              type: integer
+              example: 2
+              description: Объём реально проданный
+            sweets_received:
+              type: number
+              format: float
+              example: 3.42
+              description: Сколько ирисок получено
+          required:
+            - done_volume
+            - sweets_received
+          additionalProperties: false
+          example:
+            done_volume: 2
+            sweets_received: 3.42
+        - type: object
+          properties:
+            done_volume:
+              type: integer
+              example: 0
+              description: Объём реально проданный
+            sweets_received:
+              type: number
+              format: float
+              example: 0
+              description: Сколько ирисок получено
+            new_order:
+              type: object
+              properties:
+                volume:
+                  type: integer
+                  example: 1
+                  description: Объём нового ордера
+                price:
+                  type: number
+                  format: float
+                  example: 10
+                  description: Цена ордера
+                id:
+                  type: integer
+                  example: 990876
+                  description: ID ордера
+              required:
+                - volume
+                - price
+                - id
+              additionalProperties: false
+          required:
+            - done_volume
+            - sweets_received
+            - new_order
+          additionalProperties: false
+          example:
+            done_volume: 0
+            sweets_received: 0
+            new_order:
+              volume: 1
+              price: 10
+              id: 990876
+    CancelResponse:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            gold:
+              type: number
+              format: float
+              example: 0
+              description: Количество возвращённого голды
+            sweets:
+              type: number
+              format: float
+              example: 1
+              description: Количество возвращённых ирисок
+          required:
+            - gold
+            - sweets
+          additionalProperties: false
+      required:
+        - result
+      example:
+        result:
+          gold: 0
+          sweets: 1
+    TradeOrdersResponse:
+      type: object
+      properties:
+        buy:
+          type: array
+          description: Список заявок на покупку
+          items:
+            type: object
+            properties:
+              volume:
+                type: integer
+                example: 1646
+                description: Объём покупки
+              price:
+                type: number
+                format: float
+                example: 1.74
+                description: Цена покупки
+            required:
+              - volume
+              - price
+            additionalProperties: false
+        sell:
+          type: array
+          description: Список заявок на продажу
+          items:
+            type: object
+            properties:
+              volume:
+                type: integer
+                example: 4692
+                description: Объём продажи
+              price:
+                type: number
+                format: float
+                example: 1.76
+                description: Цена продажи
+            required:
+              - volume
+              - price
+            additionalProperties: false
+      required:
+        - buy
+        - sell
+      additionalProperties: false
+      example:
+        buy:
+          - volume: 1646
+            price: 1.74
+          - volume: 4441
+            price: 1.73
+        sell:
+          - volume: 4692
+            price: 1.76
+          - volume: 152
+            price: 1.77
+    TradeDealsResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 661706
+          group_id:
+            type: integer
+            example: 661702
+          date:
+            type: integer
+            format: int64
+            example: 1759654694
+            description: UNIX-время сделки в секундах
+          price:
+            type: number
+            format: float
+            example: 1.75
+          volume:
+            type: integer
+            example: 30
+          type:
+            type: string
+            enum:
+              - buy
+              - sell
+            example: sell
+        required:
+          - id
+          - group_id
+          - date
+          - price
+          - volume
+          - type
+    GetUpdatesResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 11
+            description: ID события
+          type:
+            type: string
+            enum:
+              - sweets_log
+              - gold_log
+              - donate_score_log
+            example: donate_score_log
+            description: 'Тип события: sweets_log — операции с ирисками, gold_log — с голдой, donate_score_log — с донат-очками'
+          date:
+            type: integer
+            format: int64
+            example: 1756286741
+            description: Время события в формате UNIX (секунды)
+          object:
+            type: object
+            description: Объект события, структура совпадает с объектами из pocket/sweets/history, pocket/gold/history или pocket/donate_score/history
+        required:
+          - id
+          - type
+          - date
+          - object
+    IrisAgentsResponse:
+      type: array
+      items:
+        type: integer
+        format: int64
+      example:
+        - 571497337
+        - 6826112951
+        - 7057861690
+        - 1072639353
+        - 6530053533
+        - 956560198
+        - 1135399536
+        - 5484288853
+        - 1082239406
+        - 661079614
+    LastVersionResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          example: '0.3'
+          description: Текущая версия API Iris
+      required:
+        - result
+paths:
+  /{token}/pocket/balance:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Получить баланс мешка (голда, ириски, донат очки)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+  /{token}/pocket/sweets/give:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Передать ириски пользователю
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiveResult'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+        - name: sweets
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 1.e-8
+            example: 10
+        - name: comment
+          in: query
+          required: false
+          schema:
+            type: string
+            example: спасибо
+  /{token}/pocket/gold/give:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Передать голду пользователю
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiveResult'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+        - name: gold
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 1.e-8
+            example: 10
+        - name: comment
+          in: query
+          required: false
+          schema:
+            type: string
+            example: спасибо
+  /{token}/pocket/donate_score/give:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Передать очки доната пользователю
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiveResult'
+      parameters:
+        - name: amount
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 5
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+        - name: comment
+          in: query
+          required: false
+          schema:
+            type: string
+            example: на наклейки
+  /{token}/pocket/sweets/history:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: История операций с ирисками
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+  /{token}/pocket/gold/history:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: История операций с голдой
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+  /{token}/pocket/donate_score/history:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: История операций с очками доната
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryDonateScore'
+  /{token}/pocket/enable:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Открыть доступ к мешку
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+  /{token}/pocket/disable:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Закрыть доступ к мешку
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+  /{token}/pocket/allow_all:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Разрешить всем переводить в мешок
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+  /{token}/pocket/deny_all:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Запретить всем переводить в мешок
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+  /{token}/pocket/allow_user:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Разрешить пользователю переводить в мешок
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+  /{token}/pocket/deny_user:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Pocket
+      summary: Запретить пользователю переводить в мешок
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+  /{token}/getUpdates:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Updates
+      summary: Получить события (updates)
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+          description: ID последнего полученного события. Следующие события будут возвращены с id > offset.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUpdatesResponse'
+  /{token}/user_info/reg:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - UserInfo
+      summary: Первое появление пользователя
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegResponse'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+  /{token}/user_info/activity:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - UserInfo
+      summary: Активность пользователя (day/week/month/total)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivityResponse'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+  /{token}/user_info/spam:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - UserInfo
+      summary: Статус в базах spam/scam/ignore
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpamCheckResponse'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+  /{token}/user_info/stars:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - UserInfo
+      summary: Звёздность пользователя
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStarsResponse'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+  /{token}/user_info/pocket:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - UserInfo
+      summary: Информация о мешке пользователя
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPocketResponse'
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+  /{token}/trade/buy:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Trade
+      summary: Создать заявку на покупку голды
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeBuyResponse'
+      parameters:
+        - name: price
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 0.01
+            maximum: 1000000
+            example: 12.34
+        - name: volume
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 1.e-8
+            example: 5
+  /{token}/trade/sell:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Trade
+      summary: Создать заявку на продажу голды
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeSellResponse'
+      parameters:
+        - name: price
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 0.01
+            maximum: 1000000
+            example: 12.34
+        - name: volume
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 1.e-8
+            example: 5
+  /{token}/trade/cancel_price:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Trade
+      summary: Отменить все заявки по указанной цене
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelResponse'
+      parameters:
+        - name: price
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 0.01
+            maximum: 1000000
+            example: 11.11
+  /{token}/trade/cancel_all:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Trade
+      summary: Отменить все заявки бота
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelResponse'
+  /{token}/trade/cancel_part:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+      - name: id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: volume
+        in: query
+        required: false
+        schema:
+          type: number
+          format: float
+    get:
+      tags:
+        - Trade
+      summary: Частичная отмена заявок
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelResponse'
+  /k/trade/order_book:
+    get:
+      tags:
+        - Trade
+      summary: Стакан заявок (buy/sell)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeOrdersResponse'
+  /trade/deals:
+    get:
+      tags:
+        - Trade
+      summary: Лента сделок
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          description: ID сделки, начиная с которой нужно вернуть данные (опционально)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 661706
+                      description: Уникальный идентификатор сделки
+                    group_id:
+                      type: integer
+                      example: 661702
+                      description: Идентификатор группы сделок (0 — одиночная)
+                    date:
+                      type: integer
+                      format: int64
+                      example: 1759654694
+                      description: Время сделки в формате UNIX (секунды)
+                    price:
+                      type: number
+                      format: float
+                      example: 1.75
+                      description: Цена сделки
+                    volume:
+                      type: integer
+                      example: 30
+                      description: Объём сделки
+                    type:
+                      type: string
+                      enum:
+                        - buy
+                        - sell
+                      example: sell
+                      description: Тип сделки
+                  required:
+                    - id
+                    - group_id
+                    - date
+                    - price
+                    - volume
+                    - type
+                  additionalProperties: false
+  /{token}/iris_agents:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 52913131118_SEibvWeRC19iRDADADADADADAvu7TfzyOe4m6o
+    get:
+      tags:
+        - Other
+      summary: Список ID аккаунтов агентов Iris
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IrisAgentsResponse'
+  /last_version:
+    get:
+      tags:
+        - Other
+      summary: Получить текущую версию API Iris
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LastVersionResponse'

@@ -46,9 +46,8 @@ components:
       type: object
       properties:
         gold:
-          type: number
-          format: float
-          example: 123.45
+          type: integer
+          example: 123
         sweets:
           type: number
           format: float
@@ -103,6 +102,9 @@ components:
             donate_score:
               type: number
               example: 0
+        comment:
+          type: string
+          example: спасибо
         id:
           type: number
           example: 31402848
@@ -443,8 +445,7 @@ components:
           type: object
           properties:
             gold:
-              type: number
-              format: float
+              type: integer
               example: 0
               description: Количество возвращённого голды
             sweets:
@@ -672,6 +673,12 @@ paths:
           schema:
             type: string
             example: спасибо
+        - name: without_donate_score
+          in: query
+          required: false
+          schema:
+            type: boolean
+            example: false
   /{token}/pocket/gold/give:
     parameters:
       - name: token
@@ -704,8 +711,7 @@ paths:
           in: query
           required: true
           schema:
-            type: number
-            format: float
+            type: integer
             minimum: 1.e-8
             example: 10
         - name: comment
@@ -714,6 +720,12 @@ paths:
           schema:
             type: string
             example: спасибо
+        - name: without_donate_score
+          in: query
+          required: false
+          schema:
+            type: boolean
+            example: false
   /{token}/pocket/donate_score/give:
     parameters:
       - name: token
@@ -1007,6 +1019,12 @@ paths:
             type: integer
             minimum: 0
           description: ID последнего полученного события. Следующие события будут возвращены с id > offset.
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            example: 1
       responses:
         '200':
           description: OK

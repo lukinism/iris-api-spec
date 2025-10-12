@@ -73,9 +73,8 @@
         "type": "object",
         "properties": {
           "gold": {
-            "type": "number",
-            "format": "float",
-            "example": 123.45
+            "type": "integer",
+            "example": 123
           },
           "sweets": {
             "type": "number",
@@ -149,6 +148,10 @@
                 "example": 0
               }
             }
+          },
+          "comment": {
+            "type": "string",
+            "example": "спасибо"
           },
           "id": {
             "type": "number",
@@ -562,8 +565,7 @@
             "type": "object",
             "properties": {
               "gold": {
-                "type": "number",
-                "format": "float",
+                "type": "integer",
                 "example": 0,
                 "description": "Количество возвращённого голды"
               },
@@ -835,6 +837,15 @@
               "type": "string",
               "example": "спасибо"
             }
+          },
+          {
+            "name": "without_donate_score",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
           }
         ]
       }
@@ -885,8 +896,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "number",
-              "format": "float",
+              "type": "integer",
               "minimum": 1e-8,
               "example": 10
             }
@@ -898,6 +908,15 @@
             "schema": {
               "type": "string",
               "example": "спасибо"
+            }
+          },
+          {
+            "name": "without_donate_score",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": false
             }
           }
         ]
@@ -1362,6 +1381,15 @@
               "minimum": 0
             },
             "description": "ID последнего полученного события. Следующие события будут возвращены с id > offset."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 1
+            }
           }
         ],
         "responses": {

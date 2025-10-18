@@ -147,15 +147,16 @@
 ```json
 {
   "date": integer,
-  "amount": float,
-  "balance": float,
+  "amount": integer,
+  "balance": integer,
   "to_user_id": integer,
   "details": {
-    "total": float,
-    "amount": float,
-    "fee": float,
+    "total": integer,
+    "amount": integer,
+    "fee": integer,
     "donate_score": integer
   },
+  "comment": string,
   "id": integer,
   "type": string,
   "peer_id": integer

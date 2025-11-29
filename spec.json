@@ -846,6 +846,16 @@
               "type": "boolean",
               "example": false
             }
+          },
+          {
+            "name": "donate_score",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "int",
+              "example": -1
+            }
           }
         ]
       }
@@ -917,6 +927,16 @@
             "schema": {
               "type": "boolean",
               "example": false
+            }
+          },
+          {
+            "name": "donate_score",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "int",
+              "example": -1
             }
           }
         ]

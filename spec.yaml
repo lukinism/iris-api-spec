@@ -679,6 +679,13 @@ paths:
           schema:
             type: boolean
             example: false
+        - name: donate_score
+          in: query
+          required: false
+          schema:
+            type: number
+            format: int
+            example: -1
   /{token}/pocket/gold/give:
     parameters:
       - name: token
@@ -726,6 +733,13 @@ paths:
           schema:
             type: boolean
             example: false
+        - name: donate_score
+          in: query
+          required: false
+          schema:
+            type: number
+            format: int
+            example: -1
   /{token}/pocket/donate_score/give:
     parameters:
       - name: token

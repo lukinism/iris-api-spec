@@ -32,7 +32,6 @@
     - [trade/cancel_part](#tradecancel_part)
     - [trade/orderbook](#tradeorderbook)
     - [trade/deals](#tradedeals)
-    - [k/trade/order_book](#ktradeorder_book)
 - [⚙️ Остальные методы](#-остальные-методы)
     - [/iris_agents](#iris_agents)
     - [/last_version](#last_version)
@@ -640,35 +639,6 @@
 ```
 
 
-## `/k/trade/order_book`
-
-**📤 Структура запроса:**  
-(Параметров нет)
-
-**💬 Ответ:**
-```json
-{
-  "buy": [
-    { "volume": integer, "price": float },
-    { "volume": integer, "price": float }
-  ],
-  "sell": [
-    { "volume": integer, "price": float },
-    { "volume": integer, "price": float }
-  ]
-}
-```
-
-**📘 Описание полей:**
-
-| Поле | Тип | Описание |
-|------|-----|-----------|
-| `buy` | array | Список заявок на покупку |
-| `sell` | array | Список заявок на продажу |
-| `volume` | integer | Объём ордера |
-| `price` | float | Цена ордера |
-
----
 
 # ⚙️ Остальные методы
 
@@ -719,7 +689,22 @@
 
 Формат ошибки (`ApiError`):
 ```json
-{ "code": 400, "message": "Required parameter \"{parameter}\" is absent" }
+{
+  "error": {
+    "code": 401,
+    "description": "Invalid token"
+  }
+}
+```
+
+Пример с кодом 400:
+```json
+{
+  "error": {
+    "code": 400,
+    "description": "Required parameter \"{parameter}\" is absent"
+  }
+}
 ```
 
 **Коды и сообщения:**

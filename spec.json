@@ -9,10 +9,6 @@
     {
       "url": "https://iris-tg.ru/api/v0.3",
       "description": "Основное API (передавайте {token} в пути)"
-    },
-    {
-      "url": "https://iris-tg.ru",
-      "description": "Публичные данные биржи (стакан, сделки)"
     }
   ],
   "tags": [
@@ -46,18 +42,26 @@
       "ApiError": {
         "type": "object",
         "properties": {
-          "code": {
-            "type": "integer",
-            "example": 400
-          },
-          "message": {
-            "type": "string",
-            "example": "invalid user_id"
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": 400
+              },
+              "description": {
+                "type": "string",
+                "example": "invalid user_id"
+              }
+            },
+            "required": [
+              "code",
+              "description"
+            ]
           }
         },
         "required": [
-          "code",
-          "message"
+          "error"
         ]
       },
       "OkResponse": {
@@ -873,51 +877,113 @@
                   "missing_required_param": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "bad_user_id": {
                     "summary": "Неверный user_id",
                     "value": {
-                      "code": 400,
-                      "message": "User is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "User is 0 or not a number"
+                      }
                     }
                   },
                   "denied_receiving": {
                     "summary": "Переводы пользователю запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "User denied receiving"
+                      "error": {
+                        "code": 400,
+                        "description": "User denied receiving"
+                      }
                     }
                   },
                   "comment_too_long": {
                     "summary": "Комментарий слишком длинный",
                     "value": {
-                      "code": 400,
-                      "message": "Длина текста слишком длинная"
+                      "error": {
+                        "code": 400,
+                        "description": "Длина текста слишком длинная"
+                      }
                     }
                   },
                   "links_forbidden": {
                     "summary": "Запрещены ссылки",
                     "value": {
-                      "code": 400,
-                      "message": "Ссылки на сторонние сайты в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Ссылки на сторонние сайты в тексте запрещены"
+                      }
                     }
                   },
                   "mentions_forbidden": {
                     "summary": "Запрещены обращения",
                     "value": {
-                      "code": 400,
-                      "message": "Обращения к пользователям в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Обращения к пользователям в тексте запрещены"
+                      }
                     }
                   },
                   "too_many_emojis": {
                     "summary": "Слишком много смайлов",
                     "value": {
-                      "code": 400,
-                      "message": "Слишком много смайлов в тексте"
+                      "error": {
+                        "code": 400,
+                        "description": "Слишком много смайлов в тексте"
+                      }
                     }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Handler Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "Handler Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
                   }
                 }
               }
@@ -965,50 +1031,64 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidUserId": {
                     "summary": "Неверный user_id",
                     "value": {
-                      "code": 400,
-                      "message": "User is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "User is 0 or not a number"
+                      }
                     }
                   },
                   "userDeniedReceiving": {
                     "summary": "Переводы пользователю запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "User denied receiving"
+                      "error": {
+                        "code": 400,
+                        "description": "User denied receiving"
+                      }
                     }
                   },
                   "commentTooLong": {
                     "summary": "Комментарий слишком длинный",
                     "value": {
-                      "code": 400,
-                      "message": "Длина текста слишком длинная"
+                      "error": {
+                        "code": 400,
+                        "description": "Длина текста слишком длинная"
+                      }
                     }
                   },
                   "externalLinks": {
                     "summary": "Ссылки запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Ссылки на сторонние сайты в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Ссылки на сторонние сайты в тексте запрещены"
+                      }
                     }
                   },
                   "userMentions": {
                     "summary": "Обращения к пользователям запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Обращения к пользователям в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Обращения к пользователям в тексте запрещены"
+                      }
                     }
                   },
                   "tooManyEmojis": {
                     "summary": "Слишком много смайлов",
                     "value": {
-                      "code": 400,
-                      "message": "Слишком много смайлов в тексте"
+                      "error": {
+                        "code": 400,
+                        "description": "Слишком много смайлов в тексте"
+                      }
                     }
                   }
                 }
@@ -1016,19 +1096,76 @@
             },
             "description": ""
           },
-          "404": {
+          "401": {
+            "description": "Invalid token",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 404,
-                  "message": "User not found"
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "user_not_found": {
+                    "summary": "User not found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "User not found"
+                      }
+                    }
+                  },
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
                 }
               }
             },
             "description": ""
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           },
           "409": {
             "content": {
@@ -1037,8 +1174,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 409,
-                  "message": "Not enough {currently}. Need {quantity}"
+                  "error": {
+                    "code": 409,
+                    "description": "Not enough {currently}. Need {quantity}"
+                  }
                 }
               }
             },
@@ -1137,50 +1276,64 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidUserId": {
                     "summary": "Неверный user_id",
                     "value": {
-                      "code": 400,
-                      "message": "User is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "User is 0 or not a number"
+                      }
                     }
                   },
                   "userDeniedReceiving": {
                     "summary": "Переводы пользователю запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "User denied receiving"
+                      "error": {
+                        "code": 400,
+                        "description": "User denied receiving"
+                      }
                     }
                   },
                   "commentTooLong": {
                     "summary": "Комментарий слишком длинный",
                     "value": {
-                      "code": 400,
-                      "message": "Длина текста слишком длинная"
+                      "error": {
+                        "code": 400,
+                        "description": "Длина текста слишком длинная"
+                      }
                     }
                   },
                   "externalLinks": {
                     "summary": "Ссылки запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Ссылки на сторонние сайты в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Ссылки на сторонние сайты в тексте запрещены"
+                      }
                     }
                   },
                   "userMentions": {
                     "summary": "Обращения к пользователям запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Обращения к пользователям в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Обращения к пользователям в тексте запрещены"
+                      }
                     }
                   },
                   "tooManyEmojis": {
                     "summary": "Слишком много смайлов",
                     "value": {
-                      "code": 400,
-                      "message": "Слишком много смайлов в тексте"
+                      "error": {
+                        "code": 400,
+                        "description": "Слишком много смайлов в тексте"
+                      }
                     }
                   }
                 }
@@ -1188,19 +1341,76 @@
             },
             "description": ""
           },
-          "404": {
+          "401": {
+            "description": "Invalid token",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 404,
-                  "message": "User not found"
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "user_not_found": {
+                    "summary": "User not found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "User not found"
+                      }
+                    }
+                  },
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
                 }
               }
             },
             "description": ""
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           },
           "409": {
             "content": {
@@ -1209,8 +1419,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 409,
-                  "message": "Not enough {currently}. Need {quantity}"
+                  "error": {
+                    "code": 409,
+                    "description": "Not enough {currently}. Need {quantity}"
+                  }
                 }
               }
             },
@@ -1309,50 +1521,64 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidUserId": {
                     "summary": "Неверный user_id",
                     "value": {
-                      "code": 400,
-                      "message": "User is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "User is 0 or not a number"
+                      }
                     }
                   },
                   "userDeniedReceiving": {
                     "summary": "Переводы пользователю запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "User denied receiving"
+                      "error": {
+                        "code": 400,
+                        "description": "User denied receiving"
+                      }
                     }
                   },
                   "commentTooLong": {
                     "summary": "Комментарий слишком длинный",
                     "value": {
-                      "code": 400,
-                      "message": "Длина текста слишком длинная"
+                      "error": {
+                        "code": 400,
+                        "description": "Длина текста слишком длинная"
+                      }
                     }
                   },
                   "externalLinks": {
                     "summary": "Ссылки запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Ссылки на сторонние сайты в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Ссылки на сторонние сайты в тексте запрещены"
+                      }
                     }
                   },
                   "userMentions": {
                     "summary": "Обращения к пользователям запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Обращения к пользователям в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Обращения к пользователям в тексте запрещены"
+                      }
                     }
                   },
                   "tooManyEmojis": {
                     "summary": "Слишком много смайлов",
                     "value": {
-                      "code": 400,
-                      "message": "Слишком много смайлов в тексте"
+                      "error": {
+                        "code": 400,
+                        "description": "Слишком много смайлов в тексте"
+                      }
                     }
                   }
                 }
@@ -1367,8 +1593,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 404,
-                  "message": "User not found"
+                  "error": {
+                    "code": 404,
+                    "description": "User not found"
+                  }
                 }
               }
             }
@@ -1381,8 +1609,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 409,
-                  "message": "Not enough {currently}. Need {quantity}"
+                  "error": {
+                    "code": 409,
+                    "description": "Not enough {currently}. Need {quantity}"
+                  }
                 }
               }
             }
@@ -1468,6 +1698,38 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "No such bot"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1516,6 +1778,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
                 }
               }
             }
@@ -1570,6 +1894,38 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "No such bot"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1613,57 +1969,73 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidUserId": {
                     "summary": "Неверный user_id",
                     "value": {
-                      "code": 400,
-                      "message": "User is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "User is 0 or not a number"
+                      }
                     }
                   },
                   "userDeniedReceiving": {
                     "summary": "Переводы пользователю запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "User denied receiving"
+                      "error": {
+                        "code": 400,
+                        "description": "User denied receiving"
+                      }
                     }
                   },
                   "commentTooLong": {
                     "summary": "Комментарий слишком длинный",
                     "value": {
-                      "code": 400,
-                      "message": "Длина текста слишком длинная"
+                      "error": {
+                        "code": 400,
+                        "description": "Длина текста слишком длинная"
+                      }
                     }
                   },
                   "externalLinks": {
                     "summary": "Ссылки запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Ссылки на сторонние сайты в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Ссылки на сторонние сайты в тексте запрещены"
+                      }
                     }
                   },
                   "userMentions": {
                     "summary": "Обращения к пользователям запрещены",
                     "value": {
-                      "code": 400,
-                      "message": "Обращения к пользователям в тексте запрещены"
+                      "error": {
+                        "code": 400,
+                        "description": "Обращения к пользователям в тексте запрещены"
+                      }
                     }
                   },
                   "tooManyEmojis": {
                     "summary": "Слишком много смайлов",
                     "value": {
-                      "code": 400,
-                      "message": "Слишком много смайлов в тексте"
+                      "error": {
+                        "code": 400,
+                        "description": "Слишком много смайлов в тексте"
+                      }
                     }
                   },
                   "invalidTgStars": {
                     "summary": "Количество тг-звёзд указано неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Tg stars is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Tg stars is 0 or not a number"
+                      }
                     }
                   }
                 }
@@ -1671,19 +2043,76 @@
             },
             "description": ""
           },
-          "404": {
+          "401": {
+            "description": "Invalid token",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 404,
-                  "message": "User not found"
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "user_not_found": {
+                    "summary": "User not found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "User not found"
+                      }
+                    }
+                  },
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
                 }
               }
             },
             "description": ""
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           },
           "409": {
             "content": {
@@ -1692,8 +2121,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 409,
-                  "message": "Not enough {currently}. Need {quantity}"
+                  "error": {
+                    "code": 409,
+                    "description": "Not enough {currently}. Need {quantity}"
+                  }
                 }
               }
             },
@@ -1785,6 +2216,68 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1828,15 +2321,19 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidTgStars": {
                     "summary": "Количество тг-звёзд указано неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Tg stars is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Tg stars is 0 or not a number"
+                      }
                     }
                   }
                 }
@@ -1851,12 +2348,46 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 409,
-                  "message": "Not enough {currently}. Need {quantity}"
+                  "error": {
+                    "code": 409,
+                    "description": "Not enough {currently}. Need {quantity}"
+                  }
                 }
               }
             },
             "description": ""
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "No such bot"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1912,21 +2443,87 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidTgStars": {
                     "summary": "Количество тг-звёзд указано неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Tg stars is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Tg stars is 0 or not a number"
+                      }
                     }
                   }
                 }
               }
             },
             "description": ""
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -1971,6 +2568,68 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2000,6 +2659,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OkResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
                 }
               }
             }
@@ -2035,6 +2756,68 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2064,6 +2847,68 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OkResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
                 }
               }
             }
@@ -2110,21 +2955,87 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidUserId": {
                     "summary": "Неверный user_id",
                     "value": {
-                      "code": 400,
-                      "message": "User is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "User is 0 or not a number"
+                      }
                     }
                   }
                 }
               }
             },
             "description": ""
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -2180,21 +3091,87 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidUserId": {
                     "summary": "Неверный user_id",
                     "value": {
-                      "code": 400,
-                      "message": "User is 0 or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "User is 0 or not a number"
+                      }
                     }
                   }
                 }
               }
             },
             "description": ""
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -2259,6 +3236,68 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2299,12 +3338,30 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 400,
-                  "message": "Required parameter \"{parameter}\" is absent"
+                  "error": {
+                    "code": 400,
+                    "description": "Required parameter \"{parameter}\" is absent"
+                  }
                 }
               }
             },
             "description": ""
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
           },
           "403": {
             "content": {
@@ -2313,12 +3370,60 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 403,
-                  "message": "Rights are not given"
+                  "error": {
+                    "code": 403,
+                    "description": "Rights are not given"
+                  }
                 }
               }
             },
             "description": ""
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -2371,8 +3476,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 400,
-                  "message": "Required parameter \"{parameter}\" is absent"
+                  "error": {
+                    "code": 400,
+                    "description": "Required parameter \"{parameter}\" is absent"
+                  }
                 }
               }
             },
@@ -2385,8 +3492,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 403,
-                  "message": "Rights are not given"
+                  "error": {
+                    "code": 403,
+                    "description": "Rights are not given"
+                  }
                 }
               }
             },
@@ -2443,8 +3552,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 400,
-                  "message": "Required parameter \"{parameter}\" is absent"
+                  "error": {
+                    "code": 400,
+                    "description": "Required parameter \"{parameter}\" is absent"
+                  }
                 }
               }
             },
@@ -2457,12 +3568,46 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 403,
-                  "message": "Rights are not given"
+                  "error": {
+                    "code": 403,
+                    "description": "Rights are not given"
+                  }
                 }
               }
             },
             "description": ""
+          },
+          "404": {
+            "description": "Handler Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "Handler Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -2515,8 +3660,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 400,
-                  "message": "Required parameter \"{parameter}\" is absent"
+                  "error": {
+                    "code": 400,
+                    "description": "Required parameter \"{parameter}\" is absent"
+                  }
                 }
               }
             },
@@ -2529,8 +3676,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 403,
-                  "message": "Rights are not given"
+                  "error": {
+                    "code": 403,
+                    "description": "Rights are not given"
+                  }
                 }
               }
             },
@@ -2588,8 +3737,10 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 400,
-                  "message": "Required parameter \"{parameter}\" is absent"
+                  "error": {
+                    "code": 400,
+                    "description": "Required parameter \"{parameter}\" is absent"
+                  }
                 }
               }
             }
@@ -2602,8 +3753,42 @@
                   "$ref": "#/components/schemas/ApiError"
                 },
                 "example": {
-                  "code": 403,
-                  "message": "Rights are not given"
+                  "error": {
+                    "code": 403,
+                    "description": "Rights are not given"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Handler Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "Handler Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
                 }
               }
             }
@@ -2662,28 +3847,66 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidPrice": {
                     "summary": "Цена указана неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Price is 0, negative or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Price is 0, negative or not a number"
+                      }
                     }
                   },
                   "invalidVolume": {
                     "summary": "Объём указан неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Volume is 0, negative or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Volume is 0, negative or not a number"
+                      }
                     }
                   }
                 }
               }
             },
             "description": ""
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "No such bot"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -2752,28 +3975,66 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidPrice": {
                     "summary": "Цена указана неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Price is 0, negative or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Price is 0, negative or not a number"
+                      }
                     }
                   },
                   "invalidVolume": {
                     "summary": "Объём указан неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Volume is 0, negative or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Volume is 0, negative or not a number"
+                      }
                     }
                   }
                 }
               }
             },
             "description": ""
+          },
+          "404": {
+            "description": "Handler Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "Handler Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -2842,21 +4103,57 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidPrice": {
                     "summary": "Цена указана неверно",
                     "value": {
-                      "code": 400,
-                      "message": "Price is 0, negative or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "Price is 0, negative or not a number"
+                      }
                     }
                   }
                 }
               }
             },
             "description": ""
+          },
+          "404": {
+            "description": "Handler Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "Handler Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -2900,6 +4197,38 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CancelResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "No such bot"
+                  }
                 }
               }
             }
@@ -2963,36 +4292,54 @@
                   "requiredParameterAbsent": {
                     "summary": "Не указан обязательный параметр",
                     "value": {
-                      "code": 400,
-                      "message": "Required parameter \"{parameter}\" is absent"
+                      "error": {
+                        "code": 400,
+                        "description": "Required parameter \"{parameter}\" is absent"
+                      }
                     }
                   },
                   "invalidId": {
                     "summary": "ID заявки указан неверно",
                     "value": {
-                      "code": 400,
-                      "message": "ID is 0, negative or not a number"
+                      "error": {
+                        "code": 400,
+                        "description": "ID is 0, negative or not a number"
+                      }
                     }
                   }
                 }
               }
             },
             "description": ""
-          }
-        }
-      }
-    },
-    "/k/trade/order_book": {
-      "get": {
-        "tags": ["Trade"],
-        "summary": "Стакан заявок (buy/sell)",
-        "responses": {
-          "200": {
-            "description": "OK",
+          },
+          "401": {
+            "description": "Invalid token",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TradeOrdersResponse"
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "No such bot"
+                  }
                 }
               }
             }
@@ -3011,6 +4358,38 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TradeOrdersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Handler Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "Handler Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
                 }
               }
             }
@@ -3131,6 +4510,68 @@
                 "schema": { "$ref": "#/components/schemas/IrisAgentsResponse" }
               }
             }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -3157,6 +4598,68 @@
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/LastVersionResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 401,
+                    "description": "Invalid token"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such bot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "no_such_bot": {
+                    "summary": "No such bot",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "No such bot"
+                      }
+                    }
+                  },
+                  "handler_not_found": {
+                    "summary": "Handler Not Found",
+                    "value": {
+                      "error": {
+                        "code": 404,
+                        "description": "Handler Not Found"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
+                  }
+                }
               }
             }
           }

@@ -17,6 +17,8 @@ tags:
     description: Получение событий/обновлений
   - name: Trade
     description: Торговля и публичные рыночные данные
+  - name: Tgstars
+    description: Операции с телеграм-звёздами
   - name: Other
     description: Системные данные Ирис (агенты и т.п.)
 components:
@@ -69,6 +71,68 @@ components:
           example: 987654321
       required:
         - result
+    TgStarsPriceResult:
+      type: object
+      properties:
+        tgstars:
+          type: integer
+          example: 100
+        sweets:
+          type: integer
+          example: 250
+      required:
+        - tgstars
+        - sweets
+      additionalProperties: false
+    TgStarsPriceResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/TgStarsPriceResult'
+      required:
+        - result
+    TgStarsHistoryItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        date:
+          type: integer
+          format: int64
+          example: 1759543048000
+        amount:
+          type: integer
+          example: -5
+        balance:
+          type: integer
+          example: 120
+        peer_id:
+          type: integer
+          format: int64
+          example: 661079614
+        type:
+          type: string
+          enum:
+            - send
+            - receive
+            - purchase
+          example: send
+        comment:
+          type: string
+          example: перевод пользователю
+      required:
+        - id
+        - date
+        - amount
+        - balance
+        - peer_id
+        - type
+      additionalProperties: false
+    TgStarsHistory:
+      type: array
+      items:
+        $ref: '#/components/schemas/TgStarsHistoryItem'
     History:
       type: object
       properties:
@@ -117,6 +181,7 @@ components:
             - dividends
             - trade_sale_order
             - send_with
+            - purchase_tgstars
           example: send
         peer_id:
           type: number
@@ -570,8 +635,9 @@ components:
               - sweets_log
               - gold_log
               - donate_score_log
+              - tgstars_log
             example: donate_score_log
-            description: 'Тип события: sweets_log — операции с ирисками, gold_log — с голдой, donate_score_log — с донат-очками'
+            description: 'Тип события: sweets_log — операции с ирисками, gold_log — с голдой, donate_score_log — с донат-очками, tgstars_log — с телеграм-звёздами'
           date:
             type: integer
             format: int64
@@ -579,7 +645,7 @@ components:
             description: Время события в формате UNIX (секунды)
           object:
             type: object
-            description: Объект события, структура совпадает с объектами из pocket/sweets/history, pocket/gold/history или pocket/donate_score/history
+            description: Объект события, структура совпадает с объектами из pocket/sweets/history, pocket/gold/history, pocket/donate_score/history или pocket/tgstars/history
         required:
           - id
           - type
@@ -631,6 +697,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Balance'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                missing_required_param:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                bad_user_id:
+                  summary: Неверный user_id
+                  value:
+                    code: 400
+                    message: User is 0 or not a number
+                denied_receiving:
+                  summary: Переводы пользователю запрещены
+                  value:
+                    code: 400
+                    message: User denied receiving
+                comment_too_long:
+                  summary: Комментарий слишком длинный
+                  value:
+                    code: 400
+                    message: Длина текста слишком длинная
+                links_forbidden:
+                  summary: Запрещены ссылки
+                  value:
+                    code: 400
+                    message: Ссылки на сторонние сайты в тексте запрещены
+                mentions_forbidden:
+                  summary: Запрещены обращения
+                  value:
+                    code: 400
+                    message: Обращения к пользователям в тексте запрещены
+                too_many_emojis:
+                  summary: Слишком много смайлов
+                  value:
+                    code: 400
+                    message: Слишком много смайлов в тексте
   /{token}/pocket/sweets/give:
     parameters:
       - name: token
@@ -651,6 +759,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GiveResult'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidUserId:
+                  summary: Неверный user_id
+                  value:
+                    code: 400
+                    message: User is 0 or not a number
+                userDeniedReceiving:
+                  summary: Переводы пользователю запрещены
+                  value:
+                    code: 400
+                    message: User denied receiving
+                commentTooLong:
+                  summary: Комментарий слишком длинный
+                  value:
+                    code: 400
+                    message: Длина текста слишком длинная
+                externalLinks:
+                  summary: Ссылки запрещены
+                  value:
+                    code: 400
+                    message: Ссылки на сторонние сайты в тексте запрещены
+                userMentions:
+                  summary: Обращения к пользователям запрещены
+                  value:
+                    code: 400
+                    message: Обращения к пользователям в тексте запрещены
+                tooManyEmojis:
+                  summary: Слишком много смайлов
+                  value:
+                    code: 400
+                    message: Слишком много смайлов в тексте
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 404
+                message: User not found
+          description: ''
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 409
+                message: Not enough {currently}. Need {quantity}
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -706,6 +874,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GiveResult'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidUserId:
+                  summary: Неверный user_id
+                  value:
+                    code: 400
+                    message: User is 0 or not a number
+                userDeniedReceiving:
+                  summary: Переводы пользователю запрещены
+                  value:
+                    code: 400
+                    message: User denied receiving
+                commentTooLong:
+                  summary: Комментарий слишком длинный
+                  value:
+                    code: 400
+                    message: Длина текста слишком длинная
+                externalLinks:
+                  summary: Ссылки запрещены
+                  value:
+                    code: 400
+                    message: Ссылки на сторонние сайты в тексте запрещены
+                userMentions:
+                  summary: Обращения к пользователям запрещены
+                  value:
+                    code: 400
+                    message: Обращения к пользователям в тексте запрещены
+                tooManyEmojis:
+                  summary: Слишком много смайлов
+                  value:
+                    code: 400
+                    message: Слишком много смайлов в тексте
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 404
+                message: User not found
+          description: ''
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 409
+                message: Not enough {currently}. Need {quantity}
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -760,6 +988,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GiveResult'
+        '400':
+          description: 'Возможные ошибки: 1 — Required parameter "{parameter}" is absent; 2 — User is 0 or not a number; 3 — User denied receiving; 4 — Длина текста слишком длинная (максимум 128 символов); 5 — Ссылки на сторонние сайты в тексте запрещены; 6 — Обращения к пользователям в тексте запрещены; 7 — Слишком много смайлов в тексте (максимум 99)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidUserId:
+                  summary: Неверный user_id
+                  value:
+                    code: 400
+                    message: User is 0 or not a number
+                userDeniedReceiving:
+                  summary: Переводы пользователю запрещены
+                  value:
+                    code: 400
+                    message: User denied receiving
+                commentTooLong:
+                  summary: Комментарий слишком длинный
+                  value:
+                    code: 400
+                    message: Длина текста слишком длинная
+                externalLinks:
+                  summary: Ссылки запрещены
+                  value:
+                    code: 400
+                    message: Ссылки на сторонние сайты в тексте запрещены
+                userMentions:
+                  summary: Обращения к пользователям запрещены
+                  value:
+                    code: 400
+                    message: Обращения к пользователям в тексте запрещены
+                tooManyEmojis:
+                  summary: Слишком много смайлов
+                  value:
+                    code: 400
+                    message: Слишком много смайлов в тексте
+        '404':
+          description: 16 — User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 404
+                message: User not found
+        '409':
+          description: 19 — Not enough {currently}. Need {quantity}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 409
+                message: Not enough {currently}. Need {quantity}
       parameters:
         - name: amount
           in: query
@@ -877,6 +1165,248 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HistoryDonateScore'
+  /{token}/pocket/tgstars/give:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Tgstars
+      summary: Передать тг-звёзды пользователю
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiveResult'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidUserId:
+                  summary: Неверный user_id
+                  value:
+                    code: 400
+                    message: User is 0 or not a number
+                userDeniedReceiving:
+                  summary: Переводы пользователю запрещены
+                  value:
+                    code: 400
+                    message: User denied receiving
+                commentTooLong:
+                  summary: Комментарий слишком длинный
+                  value:
+                    code: 400
+                    message: Длина текста слишком длинная
+                externalLinks:
+                  summary: Ссылки запрещены
+                  value:
+                    code: 400
+                    message: Ссылки на сторонние сайты в тексте запрещены
+                userMentions:
+                  summary: Обращения к пользователям запрещены
+                  value:
+                    code: 400
+                    message: Обращения к пользователям в тексте запрещены
+                tooManyEmojis:
+                  summary: Слишком много смайлов
+                  value:
+                    code: 400
+                    message: Слишком много смайлов в тексте
+                invalidTgStars:
+                  summary: Количество тг-звёзд указано неверно
+                  value:
+                    code: 400
+                    message: Tg stars is 0 or not a number
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 404
+                message: User not found
+          description: ''
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 409
+                message: Not enough {currently}. Need {quantity}
+          description: ''
+      parameters:
+        - name: tgstars
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+        - name: comment
+          in: query
+          required: false
+          schema:
+            type: string
+            example: спасибо
+  /{token}/pocket/tgstars/history:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Tgstars
+      summary: История операций с тг-звёздами
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: ID записи, начиная с которой нужно вернуть данные
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 200
+          description: Количество записей (по умолчанию 200)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TgStarsHistory'
+  /{token}/pocket/tgstars/buy:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Tgstars
+      summary: Купить тг-звёзды за ириски
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiveResult'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidTgStars:
+                  summary: Количество тг-звёзд указано неверно
+                  value:
+                    code: 400
+                    message: Tg stars is 0 or not a number
+          description: ''
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 409
+                message: Not enough {currently}. Need {quantity}
+          description: ''
+      parameters:
+        - name: tgstars
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+  /{token}/pocket/tgstars/price:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - Tgstars
+      summary: Оценка стоимости покупки тг-звёзд
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TgStarsPriceResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidTgStars:
+                  summary: Количество тг-звёзд указано неверно
+                  value:
+                    code: 400
+                    message: Tg stars is 0 or not a number
+          description: ''
+      parameters:
+        - name: tgstars
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
   /{token}/pocket/enable:
     parameters:
       - name: token
@@ -977,6 +1507,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidUserId:
+                  summary: Неверный user_id
+                  value:
+                    code: 400
+                    message: User is 0 or not a number
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -1005,6 +1552,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidUserId:
+                  summary: Неверный user_id
+                  value:
+                    code: 400
+                    message: User is 0 or not a number
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -1066,6 +1630,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserRegResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 400
+                message: Required parameter "{parameter}" is absent
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 403
+                message: Rights are not given
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -1094,6 +1676,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserActivityResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 400
+                message: Required parameter "{parameter}" is absent
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 403
+                message: Rights are not given
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -1122,6 +1722,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpamCheckResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 400
+                message: Required parameter "{parameter}" is absent
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 403
+                message: Rights are not given
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -1150,6 +1768,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserStarsResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 400
+                message: Required parameter "{parameter}" is absent
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 403
+                message: Rights are not given
+          description: ''
       parameters:
         - name: user_id
           in: query
@@ -1178,6 +1814,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserPocketResponse'
+        '400':
+          description: 1 — Required parameter "{parameter}" is absent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 400
+                message: Required parameter "{parameter}" is absent
+        '403':
+          description: 14 — Rights are not given
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                code: 403
+                message: Rights are not given
       parameters:
         - name: user_id
           in: query
@@ -1206,6 +1860,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TradeBuyResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidPrice:
+                  summary: Цена указана неверно
+                  value:
+                    code: 400
+                    message: Price is 0, negative or not a number
+                invalidVolume:
+                  summary: Объём указан неверно
+                  value:
+                    code: 400
+                    message: Volume is 0, negative or not a number
+          description: ''
       parameters:
         - name: price
           in: query
@@ -1244,6 +1920,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TradeSellResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidPrice:
+                  summary: Цена указана неверно
+                  value:
+                    code: 400
+                    message: Price is 0, negative or not a number
+                invalidVolume:
+                  summary: Объём указан неверно
+                  value:
+                    code: 400
+                    message: Volume is 0, negative or not a number
+          description: ''
       parameters:
         - name: price
           in: query
@@ -1282,6 +1980,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CancelResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidPrice:
+                  summary: Цена указана неверно
+                  value:
+                    code: 400
+                    message: Price is 0, negative or not a number
+          description: ''
       parameters:
         - name: price
           in: query
@@ -1343,11 +2058,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CancelResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    code: 400
+                    message: Required parameter "{parameter}" is absent
+                invalidId:
+                  summary: ID заявки указан неверно
+                  value:
+                    code: 400
+                    message: ID is 0, negative or not a number
+          description: ''
   /k/trade/order_book:
     get:
       tags:
         - Trade
       summary: Стакан заявок (buy/sell)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeOrdersResponse'
+  /trade/orderbook:
+    get:
+      tags:
+        - Trade
+      summary: Текущий стакан заявок Ирис-биржи
       responses:
         '200':
           description: OK
@@ -1365,7 +2109,16 @@ paths:
           in: query
           schema:
             type: integer
-          description: ID сделки, начиная с которой нужно вернуть данные (опционально)
+            minimum: 0
+          description: ID сделки, начиная с которой нужно вернуть данные (по умолчанию 0 — выдаст последние limit сделок)
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 200
+            default: 200
+          description: Максимальное количество записей (по умолчанию 200)
       responses:
         '200':
           description: OK

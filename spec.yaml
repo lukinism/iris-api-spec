@@ -344,11 +344,16 @@ components:
               type: integer
               example: 0
               description: Количество звёзд
+            tgstars:
+              type: integer
+              example: 100
+              description: Количество тг-звёзд
           required:
             - gold
             - coins
             - sweets
             - stars
+            - tgstars
           additionalProperties: false
       required:
         - result

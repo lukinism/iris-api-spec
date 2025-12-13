@@ -419,7 +419,8 @@
     "gold": integer,
     "coins": integer,
     "sweets": float,
-    "stars": integer
+    "stars": integer,
+    "tgstars": integer
   }
 }
 ```

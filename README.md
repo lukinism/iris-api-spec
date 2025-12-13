@@ -1,4 +1,4 @@
-# 📘 API Документация Iris
+# 📘 API Документация Iris. Актуальная версия: 0.4.
 
 ## 📑 Оглавление
 - [📦 Методы Pocket](#-методы-pocket)
@@ -49,9 +49,12 @@
 **💬 Ответ:**
 ```json
 {
-  "gold": integer,
-  "sweets": float,
-  "donate_score": integer
+  "result": {
+    "gold": integer,
+    "sweets": float,
+    "donate_score": integer,
+    "tgstars": integer
+  }
 }
 ```
 
@@ -64,7 +67,7 @@
 | Параметр | Тип   | Описание                                                                               |
 |-----------|-------|----------------------------------------------------------------------------------------|
 | `user_id` | integer | ✅ ID пользователя, которому отправляются ириски                                        |
-| `sweets` | float | ✅ Количество ирисок для отправки                                                       |
+| `amount` | float | ✅ Количество ирисок для отправки                                                       |
 | `comment` | string | 💬 Комментарий к переводу                                                              |
 | `without_donate_score` | boolean | ✅ Использовать донат очки к переводу                                                   |
 | `donate_score` | int   | ✅ Максимальное количество очков доната, которые будут использоваться в передаче ирисок |
@@ -83,7 +86,7 @@
 | Параметр | Тип     | Описание                                                                              |
 |-----------|---------|---------------------------------------------------------------------------------------|
 | `user_id` | integer | ✅ ID пользователя, которому отправляется голда                                        |
-| `gold` | integer  | ✅ Количество голды для отправки                                                       |
+| `amount` | integer  | ✅ Количество голды для отправки                                                       |
 | `comment` | string  | 💬 Комментарий к переводу                                                             |
 | `without_donate_score` | boolean | ✅ Использовать донат очки к переводу                                                  |
 | `donate_score` | int   | ✅ Максимальное количество очков доната, которые будут использоваться в передаче голды |
@@ -124,20 +127,24 @@
 **💬 Ответ:**
 ```json
 {
-  "date": integer,
-  "amount": float,
-  "balance": float,
-  "to_user_id": integer,
-  "details": {
-    "total": float,
-    "amount": float,
-    "fee": float,
-    "donate_score": integer
-  },
-  "comment": string,
-  "id": integer,
-  "type": string,
-  "peer_id": integer
+  "result": [
+    {
+      "date": integer,
+      "amount": float,
+      "balance": float,
+      "to_user_id": integer,
+      "details": {
+        "total": float,
+        "amount": float,
+        "fee": float,
+        "donate_score": integer
+      },
+      "comment": string,
+      "id": integer,
+      "type": string,
+      "peer_id": integer
+    }
+  ]
 }
 ```
 `type` может быть `send`, `receive`, `trade`, `dividends`, `trade_sale_order`, `send_with`, `purchase_tgstars` (ириски потрачены на конвертацию в тг-звёзды).
@@ -150,7 +157,7 @@
 
 | Параметр | Тип | Описание |
 |-----------|-----|-----------|
-| `tgstars` | integer | ✅ Количество тг-звёзд для отправки |
+| `amount` | integer | ✅ Количество тг-звёзд для отправки |
 | `user_id` | integer | ✅ ID получателя |
 | `comment` | string | 💬 Комментарий к переводу |
 
@@ -173,13 +180,17 @@
 **💬 Ответ (список записей):**
 ```json
 {
-  "id": integer,
-  "type": "send | receive | purchase",
-  "date": integer,
-  "amount": integer,
-  "balance": integer,
-  "peer_id": integer,
-  "comment": string
+  "result": [
+    {
+      "id": integer,
+      "type": "send | receive | purchase",
+      "date": integer,
+      "amount": integer,
+      "balance": integer,
+      "peer_id": integer,
+      "comment": string
+    }
+  ]
 }
 ```
 
@@ -191,7 +202,7 @@
 
 | Параметр | Тип | Описание |
 |-----------|-----|-----------|
-| `tgstars` | integer | ✅ Количество тг-звёзд для покупки |
+| `amount` | integer | ✅ Количество тг-звёзд для покупки |
 
 **💬 Ответ:**
 ```json
@@ -206,7 +217,7 @@
 
 | Параметр | Тип | Описание |
 |-----------|-----|-----------|
-| `tgstars` | integer | ✅ Количество тг-звёзд для оценки стоимости |
+| `amount` | integer | ✅ Количество тг-звёзд для оценки стоимости |
 
 **💬 Ответ:**
 ```json
@@ -232,20 +243,24 @@
 **💬 Ответ:**
 ```json
 {
-  "date": integer,
-  "amount": integer,
-  "balance": integer,
-  "to_user_id": integer,
-  "details": {
-    "total": integer,
-    "amount": integer,
-    "fee": integer,
-    "donate_score": integer
-  },
-  "comment": string,
-  "id": integer,
-  "type": string,
-  "peer_id": integer
+  "result": [
+    {
+      "date": integer,
+      "amount": integer,
+      "balance": integer,
+      "to_user_id": integer,
+      "details": {
+        "total": integer,
+        "amount": integer,
+        "fee": integer,
+        "donate_score": integer
+      },
+      "comment": string,
+      "id": integer,
+      "type": string,
+      "peer_id": integer
+    }
+  ]
 }
 ```
 
@@ -262,17 +277,19 @@
 
 **💬 Ответ:**
 ```json
-[
-  {
-    "date": integer,
-    "amount": integer,
-    "balance": integer,
-    "id": integer,
-    "type": string,
-    "peer_id": integer,
-    "comment": string,
-  }
-]
+{
+  "result": [
+    {
+      "date": integer,
+      "amount": integer,
+      "balance": integer,
+      "id": integer,
+      "type": string,
+      "peer_id": integer,
+      "comment": string
+    }
+  ]
+}
 ```
 
 ---
@@ -424,14 +441,16 @@
 
 **💬 Ответ:**
 ```json
-[
-  {
-    "id": 11,
-    "type": "donate_score_log",
-    "date": 1756286741,
-    "object": { ... }
-  }
-]
+{
+  "result": [
+    {
+      "id": 11,
+      "type": "donate_score_log",
+      "date": 1756286741,
+      "object": { ... }
+    }
+  ]
+}
 ```
 📘 Описание полей:
 
@@ -461,20 +480,24 @@
 **💬 Ответ (если сделка совершена):**
 ```json
 {
-  "done_volume": integer,
-  "sweets_spent": float
+  "result": {
+    "done_volume": integer,
+    "sweets_spent": float
+  }
 }
 ```
 
 **💬 Ответ (если нет предложений — создаётся заявка):**
 ```json
 {
-  "done_volume": integer,
-  "sweets_spent": float,
-  "new_order": {
-    "volume": integer,
-    "price": float,
-    "id": integer
+  "result": {
+    "done_volume": integer,
+    "sweets_spent": float,
+    "new_order": {
+      "volume": integer,
+      "price": float,
+      "id": integer
+    }
   }
 }
 ```
@@ -493,20 +516,24 @@
 **💬 Ответ (моментальная продажа):**
 ```json
 {
-  "done_volume": integer,
-  "sweets_received": float
+  "result": {
+    "done_volume": integer,
+    "sweets_received": float
+  }
 }
 ```
 
 **💬 Ответ (если нет покупателей — создаётся заявка):**
 ```json
 {
-  "done_volume": integer,
-  "sweets_received": float,
-  "new_order": {
-    "volume": integer,
-    "price": float,
-    "id": integer
+  "result": {
+    "done_volume": integer,
+    "sweets_received": float,
+    "new_order": {
+      "volume": integer,
+      "price": float,
+      "id": integer
+    }
   }
 }
 ```
@@ -596,16 +623,18 @@
 
 **💬 Ответ:**
 ```json
-[
-  {
-    "id": integer,
-    "group_id": integer,
-    "date": integer,
-    "price": float,
-    "volume": integer,
-    "type": string
-  }
-]
+{
+  "result": [
+    {
+      "id": integer,
+      "group_id": integer,
+      "date": integer,
+      "price": float,
+      "volume": integer,
+      "type": string
+    }
+  ]
+}
 ```
 
 **📘 Описание полей:**
@@ -629,12 +658,14 @@
 **💬 Ответ:**
 ```json
 {
-  "buy": [
-    { "volume": integer, "price": float }
-  ],
-  "sell": [
-    { "volume": integer, "price": float }
-  ]
+  "result": {
+    "buy": [
+      { "volume": integer, "price": float }
+    ],
+    "sell": [
+      { "volume": integer, "price": float }
+    ]
+  }
 }
 ```
 
@@ -655,7 +686,9 @@
 **💬 Ответ:**
 
 ```json
-[ integer, integer, ... ]
+{
+  "result": [ integer, integer, ... ]
+}
 ```
 
 **📘 Описание:**
@@ -664,7 +697,9 @@
 
 Пример:
 ```json
-[571497337, 6826112951, 7057861690, 1072639353, 6530053533, 956560198, 1135399536, 5484288853, 1082239406, 661079614]
+{
+  "result": [571497337, 6826112951, 7057861690, 1072639353, 6530053533, 956560198, 1135399536, 5484288853, 1082239406, 661079614]
+}
 ```
 
 ## `/last_version`
@@ -674,7 +709,7 @@
 **💬 Ответ:**
 ```json
 {
-  "result": "0.3"
+  "result": "0.4"
 }
 ```
 
@@ -737,7 +772,7 @@
 ## 💐 Особые благодарности
 
 - [**irisism**](https://t.me/irisism) — за разработку и предоставление доступа к API.
-- [**Fiftic**](https://t.me/6889986784) — за внимательность и помощь при поиске неточностей и недоработок в документации.
+- [**Fiftic**](https://t.me/m/26PUBa0BYjli) — за внимательность и помощь при поиске неточностей и недоработок в документации.
 
 ---
 

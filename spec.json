@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://iris-tg.ru/api/v0.3",
+      "url": "https://iris-tg.ru/api/v0.4",
       "description": "Основное API (передавайте {token} в пути)"
     }
   ],
@@ -93,12 +93,18 @@
             "type": "number",
             "format": "integer",
             "example": 94
+          },
+          "tgstars": {
+            "type": "number",
+            "format": "integer",
+            "example": 100
           }
         },
         "required": [
           "gold",
           "sweets",
-          "donate_score"
+          "donate_score",
+          "tgstars"
         ],
         "additionalProperties": false
       },
@@ -251,7 +257,15 @@
           },
           "type": {
             "type": "string",
-            "enum": ["send", "receive", "trade", "dividends", "trade_sale_order", "send_with", "purchase_tgstars"],
+            "enum": [
+              "send",
+              "receive",
+              "trade",
+              "dividends",
+              "trade_sale_order",
+              "send_with",
+              "purchase_tgstars"
+            ],
             "example": "send"
           },
           "peer_id": {
@@ -294,7 +308,12 @@
           },
           "type": {
             "type": "string",
-            "enum": ["send", "send_with", "receive", "receive_with"],
+            "enum": [
+              "send",
+              "send_with",
+              "receive",
+              "receive_with"
+            ],
             "example": "send"
           },
           "peer_id": {
@@ -454,11 +473,18 @@
                 "description": "Количество звёзд"
               }
             },
-            "required": ["gold", "coins", "sweets", "stars"],
+            "required": [
+              "gold",
+              "coins",
+              "sweets",
+              "stars"
+            ],
             "additionalProperties": false
           }
         },
-        "required": ["result"],
+        "required": [
+          "result"
+        ],
         "example": {
           "result": {
             "gold": 3,
@@ -487,11 +513,17 @@
                 "example": false
               }
             },
-            "required": ["is_spam", "is_ignore", "is_scam"],
+            "required": [
+              "is_spam",
+              "is_ignore",
+              "is_scam"
+            ],
             "additionalProperties": false
           }
         },
-        "required": ["result"],
+        "required": [
+          "result"
+        ],
         "example": {
           "result": {
             "is_spam": false,
@@ -515,7 +547,10 @@
                 "example": 1.74
               }
             },
-            "required": ["done_volume", "sweets_spent"],
+            "required": [
+              "done_volume",
+              "sweets_spent"
+            ],
             "additionalProperties": false,
             "example": {
               "done_volume": 1,
@@ -556,11 +591,19 @@
                     "description": "ID ордера"
                   }
                 },
-                "required": ["volume", "price", "id"],
+                "required": [
+                  "volume",
+                  "price",
+                  "id"
+                ],
                 "additionalProperties": false
               }
             },
-            "required": ["done_volume", "sweets_spent", "new_order"],
+            "required": [
+              "done_volume",
+              "sweets_spent",
+              "new_order"
+            ],
             "additionalProperties": false,
             "example": {
               "done_volume": 0,
@@ -591,7 +634,10 @@
                 "description": "Сколько ирисок получено"
               }
             },
-            "required": ["done_volume", "sweets_received"],
+            "required": [
+              "done_volume",
+              "sweets_received"
+            ],
             "additionalProperties": false,
             "example": {
               "done_volume": 2,
@@ -632,11 +678,19 @@
                     "description": "ID ордера"
                   }
                 },
-                "required": ["volume", "price", "id"],
+                "required": [
+                  "volume",
+                  "price",
+                  "id"
+                ],
                 "additionalProperties": false
               }
             },
-            "required": ["done_volume", "sweets_received", "new_order"],
+            "required": [
+              "done_volume",
+              "sweets_received",
+              "new_order"
+            ],
             "additionalProperties": false,
             "example": {
               "done_volume": 0,
@@ -668,11 +722,16 @@
                 "description": "Количество возвращённых ирисок"
               }
             },
-            "required": ["gold", "sweets"],
+            "required": [
+              "gold",
+              "sweets"
+            ],
             "additionalProperties": false
           }
         },
-        "required": ["result"],
+        "required": [
+          "result"
+        ],
         "example": {
           "result": {
             "gold": 0,
@@ -701,7 +760,10 @@
                   "description": "Цена покупки"
                 }
               },
-              "required": ["volume", "price"],
+              "required": [
+                "volume",
+                "price"
+              ],
               "additionalProperties": false
             }
           },
@@ -723,21 +785,39 @@
                   "description": "Цена продажи"
                 }
               },
-              "required": ["volume", "price"],
+              "required": [
+                "volume",
+                "price"
+              ],
               "additionalProperties": false
             }
           }
         },
-        "required": ["buy", "sell"],
+        "required": [
+          "buy",
+          "sell"
+        ],
         "additionalProperties": false,
         "example": {
           "buy": [
-            { "volume": 1646, "price": 1.74 },
-            { "volume": 4441, "price": 1.73 }
+            {
+              "volume": 1646,
+              "price": 1.74
+            },
+            {
+              "volume": 4441,
+              "price": 1.73
+            }
           ],
           "sell": [
-            { "volume": 4692, "price": 1.76 },
-            { "volume": 152, "price": 1.77 }
+            {
+              "volume": 4692,
+              "price": 1.76
+            },
+            {
+              "volume": 152,
+              "price": 1.77
+            }
           ]
         }
       },
@@ -771,7 +851,10 @@
             },
             "type": {
               "type": "string",
-              "enum": ["buy", "sell"],
+              "enum": [
+                "buy",
+                "sell"
+              ],
               "example": "sell"
             }
           },
@@ -797,7 +880,12 @@
             },
             "type": {
               "type": "string",
-              "enum": ["sweets_log", "gold_log", "donate_score_log", "tgstars_log"],
+              "enum": [
+                "sweets_log",
+                "gold_log",
+                "donate_score_log",
+                "tgstars_log"
+              ],
               "example": "donate_score_log",
               "description": "Тип события: sweets_log — операции с ирисками, gold_log — с голдой, donate_score_log — с донат-очками, tgstars_log — с телеграм-звёздами"
             },
@@ -812,7 +900,12 @@
               "description": "Объект события, структура совпадает с объектами из pocket/sweets/history, pocket/gold/history, pocket/donate_score/history или pocket/tgstars/history"
             }
           },
-          "required": ["id", "type", "date", "object"]
+          "required": [
+            "id",
+            "type",
+            "date",
+            "object"
+          ]
         }
       },
       "IrisAgentsResponse": {
@@ -821,7 +914,18 @@
           "type": "integer",
           "format": "int64"
         },
-        "example": [571497337, 6826112951, 7057861690, 1072639353, 6530053533, 956560198, 1135399536, 5484288853, 1082239406, 661079614]
+        "example": [
+          571497337,
+          6826112951,
+          7057861690,
+          1072639353,
+          6530053533,
+          956560198,
+          1135399536,
+          5484288853,
+          1082239406,
+          661079614
+        ]
       },
       "LastVersionResponse": {
         "type": "object",
@@ -832,7 +936,9 @@
             "description": "Текущая версия API Iris"
           }
         },
-        "required": ["result"]
+        "required": [
+          "result"
+        ]
       }
     }
   },
@@ -861,7 +967,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Balance"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/Balance"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -1016,7 +1130,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GiveResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/GiveResult"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -1196,13 +1318,13 @@
             }
           },
           {
-            "name": "sweets",
+            "name": "amount",
             "in": "query",
             "required": true,
             "schema": {
               "type": "number",
               "format": "float",
-              "minimum": 1e-8,
+              "minimum": 1e-08,
               "example": 10
             }
           },
@@ -1261,7 +1383,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GiveResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/GiveResult"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -1441,12 +1571,12 @@
             }
           },
           {
-            "name": "gold",
+            "name": "amount",
             "in": "query",
             "required": true,
             "schema": {
               "type": "integer",
-              "minimum": 1e-8,
+              "minimum": 1e-08,
               "example": 10
             }
           },
@@ -1505,7 +1635,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GiveResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/GiveResult"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -1679,7 +1817,7 @@
             }
           },
           {
-            "name" : "offset",
+            "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1694,7 +1832,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HistoryResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/HistoryResponse"
+                    }
+                  }
                 }
               }
             }
@@ -1763,7 +1906,7 @@
             }
           },
           {
-            "name" : "offset",
+            "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1777,7 +1920,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HistoryResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/HistoryResponse"
+                    }
+                  }
                 }
               }
             }
@@ -1890,7 +2038,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HistoryDonateScore"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/HistoryDonateScore"
+                    }
+                  }
                 }
               }
             }
@@ -1954,7 +2107,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GiveResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/GiveResult"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -2133,7 +2294,7 @@
         },
         "parameters": [
           {
-            "name": "tgstars",
+            "name": "amount",
             "in": "query",
             "required": true,
             "schema": {
@@ -2212,7 +2373,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TgStarsHistory"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/TgStarsHistory"
+                    }
+                  }
                 }
               }
             }
@@ -2306,7 +2472,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GiveResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/GiveResult"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -2392,7 +2566,7 @@
         },
         "parameters": [
           {
-            "name": "tgstars",
+            "name": "amount",
             "in": "query",
             "required": true,
             "schema": {
@@ -2428,7 +2602,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TgStarsPriceResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/TgStarsPriceResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -2528,7 +2710,7 @@
         },
         "parameters": [
           {
-            "name": "tgstars",
+            "name": "amount",
             "in": "query",
             "required": true,
             "schema": {
@@ -2564,7 +2746,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OkResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/OkResponse"
+                    }
+                  }
                 }
               }
             }
@@ -2658,7 +2845,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OkResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/OkResponse"
+                    }
+                  }
                 }
               }
             }
@@ -2752,7 +2944,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OkResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/OkResponse"
+                    }
+                  }
                 }
               }
             }
@@ -2846,7 +3043,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OkResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/OkResponse"
+                    }
+                  }
                 }
               }
             }
@@ -2940,7 +3142,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OkResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/OkResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3076,7 +3286,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OkResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/OkResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3232,7 +3450,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetUpdatesResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/GetUpdatesResponse"
+                    }
+                  }
                 }
               }
             }
@@ -3326,7 +3549,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserRegResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/UserRegResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3464,7 +3695,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserActivityResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/UserActivityResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3540,7 +3779,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpamCheckResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/SpamCheckResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3648,7 +3895,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserStarsResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/UserStarsResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3724,7 +3979,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserPocketResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/UserPocketResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3832,7 +4095,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TradeBuyResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/TradeBuyResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -3929,7 +4200,7 @@
             "schema": {
               "type": "number",
               "format": "float",
-              "minimum": 1e-8,
+              "minimum": 1e-08,
               "example": 5
             }
           }
@@ -3960,7 +4231,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TradeSellResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/TradeSellResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -4057,7 +4336,7 @@
             "schema": {
               "type": "number",
               "format": "float",
-              "minimum": 1e-8,
+              "minimum": 1e-08,
               "example": 5
             }
           }
@@ -4088,7 +4367,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CancelResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/CancelResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -4196,7 +4483,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CancelResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/CancelResponse"
+                    }
+                  }
                 }
               }
             }
@@ -4277,7 +4569,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CancelResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/CancelResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -4349,7 +4649,9 @@
     },
     "/trade/orderbook": {
       "get": {
-        "tags": ["Trade"],
+        "tags": [
+          "Trade"
+        ],
         "summary": "Текущий стакан заявок Ирис-биржи",
         "responses": {
           "200": {
@@ -4357,7 +4659,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TradeOrdersResponse"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/TradeOrdersResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
                 }
               }
             }
@@ -4431,53 +4741,96 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 661706,
-                        "description": "Уникальный идентификатор сделки"
-                      },
-                      "group_id": {
-                        "type": "integer",
-                        "example": 661702,
-                        "description": "Идентификатор группы сделок (0 — одиночная)"
-                      },
-                      "date": {
-                        "type": "integer",
-                        "format": "int64",
-                        "example": 1759654694,
-                        "description": "Время сделки в формате UNIX (секунды)"
-                      },
-                      "price": {
-                        "type": "number",
-                        "format": "float",
-                        "example": 1.75,
-                        "description": "Цена сделки"
-                      },
-                      "volume": {
-                        "type": "integer",
-                        "example": 30,
-                        "description": "Объём сделки"
-                      },
-                      "type": {
-                        "type": "string",
-                        "enum": ["buy", "sell"],
-                        "example": "sell",
-                        "description": "Тип сделки"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 661706,
+                            "description": "Уникальный идентификатор сделки"
+                          },
+                          "group_id": {
+                            "type": "integer",
+                            "example": 661702,
+                            "description": "Идентификатор группы сделок (0 — одиночная)"
+                          },
+                          "date": {
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 1759654694,
+                            "description": "Время сделки в формате UNIX (секунды)"
+                          },
+                          "price": {
+                            "type": "number",
+                            "format": "float",
+                            "example": 1.75,
+                            "description": "Цена сделки"
+                          },
+                          "volume": {
+                            "type": "integer",
+                            "example": 30,
+                            "description": "Объём сделки"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "buy",
+                              "sell"
+                            ],
+                            "example": "sell",
+                            "description": "Тип сделки"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "group_id",
+                          "date",
+                          "price",
+                          "volume",
+                          "type"
+                        ],
+                        "additionalProperties": false
                       }
-                    },
-                    "required": [
-                      "id",
-                      "group_id",
-                      "date",
-                      "price",
-                      "volume",
-                      "type"
-                    ],
-                    "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Handler Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 404,
+                    "description": "Handler Not Found"
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Flood control",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "example": {
+                  "error": {
+                    "code": 429,
+                    "description": "Flood control"
                   }
                 }
               }
@@ -4500,14 +4853,26 @@
         }
       ],
       "get": {
-        "tags": ["Other"],
+        "tags": [
+          "Other"
+        ],
         "summary": "Список ID аккаунтов агентов Iris",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/IrisAgentsResponse" }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/IrisAgentsResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
+                }
               }
             }
           },
@@ -4590,14 +4955,26 @@
         }
       ],
       "get": {
-        "tags": ["Other"],
+        "tags": [
+          "Other"
+        ],
         "summary": "Получить текущую версию API Iris",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/LastVersionResponse" }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/LastVersionResponse"
+                    }
+                  },
+                  "required": [
+                    "result"
+                  ]
+                }
               }
             }
           },

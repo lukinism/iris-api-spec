@@ -4,7 +4,7 @@ info:
   version: 0.0.1
   description: OpenAPI-схема IRIS API
 servers:
-  - url: https://iris-tg.ru/api/v0.3
+  - url: https://iris-tg.ru/api/v0.4
     description: Основное API (передавайте {token} в пути)
 tags:
   - name: Pocket
@@ -61,10 +61,15 @@ components:
           type: number
           format: integer
           example: 94
+        tgstars:
+          type: number
+          format: integer
+          example: 100
       required:
         - gold
         - sweets
         - donate_score
+        - tgstars
       additionalProperties: false
     GiveResult:
       type: object
@@ -699,7 +704,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Balance'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/Balance'
+                required:
+                  - result
         '400':
           description: Bad Request
           content:
@@ -798,7 +808,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GiveResult'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/GiveResult'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -911,7 +926,7 @@ paths:
             type: integer
             minimum: 1
             example: 123456789
-        - name: sweets
+        - name: amount
           in: query
           required: true
           schema:
@@ -957,7 +972,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GiveResult'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/GiveResult'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -1070,7 +1090,7 @@ paths:
             type: integer
             minimum: 1
             example: 123456789
-        - name: gold
+        - name: amount
           in: query
           required: true
           schema:
@@ -1115,7 +1135,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GiveResult'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/GiveResult'
+                required:
+                  - result
         '400':
           description: 'Возможные ошибки: 1 — Required parameter "{parameter}" is absent; 2 — User is 0 or not a number; 3 — User denied receiving; 4 — Длина текста слишком длинная (максимум 128 символов); 5 — Ссылки на сторонние сайты в тексте запрещены; 6 — Обращения к пользователям в тексте запрещены; 7 — Слишком много смайлов в тексте (максимум 99)'
           content:
@@ -1237,7 +1262,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoryResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/HistoryResponse'
         '401':
           description: Invalid token
           content:
@@ -1289,7 +1317,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoryResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/HistoryResponse'
         '401':
           description: Invalid token
           content:
@@ -1360,7 +1391,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HistoryDonateScore'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/HistoryDonateScore'
         '401':
           description: Invalid token
           content:
@@ -1400,7 +1434,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GiveResult'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/GiveResult'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -1512,7 +1551,7 @@ paths:
                   code: 429
                   description: Flood control
       parameters:
-        - name: tgstars
+        - name: amount
           in: query
           required: true
           schema:
@@ -1568,7 +1607,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TgStarsHistory'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/TgStarsHistory'
         '401':
           description: Invalid token
           content:
@@ -1627,7 +1669,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GiveResult'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/GiveResult'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -1678,7 +1725,7 @@ paths:
                   description: Not enough {currently}. Need {quantity}
           description: ''
       parameters:
-        - name: tgstars
+        - name: amount
           in: query
           required: true
           schema:
@@ -1704,7 +1751,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TgStarsPriceResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/TgStarsPriceResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -1764,7 +1816,7 @@ paths:
                   code: 429
                   description: Flood control
       parameters:
-        - name: tgstars
+        - name: amount
           in: query
           required: true
           schema:
@@ -1790,7 +1842,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OkResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/OkResponse'
         '401':
           description: Invalid token
           content:
@@ -1849,7 +1904,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OkResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/OkResponse'
         '401':
           description: Invalid token
           content:
@@ -1908,7 +1966,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OkResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/OkResponse'
         '401':
           description: Invalid token
           content:
@@ -1967,7 +2028,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OkResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/OkResponse'
         '401':
           description: Invalid token
           content:
@@ -2026,7 +2090,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OkResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/OkResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2112,7 +2181,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OkResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/OkResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2211,7 +2285,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetUpdatesResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/GetUpdatesResponse'
         '401':
           description: Invalid token
           content:
@@ -2270,7 +2347,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserRegResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/UserRegResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2357,7 +2439,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserActivityResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/UserActivityResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2405,7 +2492,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpamCheckResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/SpamCheckResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2473,7 +2565,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserStarsResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/UserStarsResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2521,7 +2618,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserPocketResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/UserPocketResponse'
+                required:
+                  - result
         '400':
           description: 1 — Required parameter "{parameter}" is absent
           content:
@@ -2589,7 +2691,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TradeBuyResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/TradeBuyResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2672,7 +2779,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TradeSellResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/TradeSellResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2755,7 +2867,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CancelResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/CancelResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2824,7 +2941,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CancelResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/CancelResponse'
         '401':
           description: Invalid token
           content:
@@ -2875,7 +2995,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CancelResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/CancelResponse'
+                required:
+                  - result
         '400':
           content:
             application/json:
@@ -2926,7 +3051,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TradeOrdersResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/TradeOrdersResponse'
+                required:
+                  - result
         '404':
           description: Handler Not Found
           content:
@@ -2973,47 +3103,72 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 661706
-                      description: Уникальный идентификатор сделки
-                    group_id:
-                      type: integer
-                      example: 661702
-                      description: Идентификатор группы сделок (0 — одиночная)
-                    date:
-                      type: integer
-                      format: int64
-                      example: 1759654694
-                      description: Время сделки в формате UNIX (секунды)
-                    price:
-                      type: number
-                      format: float
-                      example: 1.75
-                      description: Цена сделки
-                    volume:
-                      type: integer
-                      example: 30
-                      description: Объём сделки
-                    type:
-                      type: string
-                      enum:
-                        - buy
-                        - sell
-                      example: sell
-                      description: Тип сделки
-                  required:
-                    - id
-                    - group_id
-                    - date
-                    - price
-                    - volume
-                    - type
-                  additionalProperties: false
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 661706
+                          description: Уникальный идентификатор сделки
+                        group_id:
+                          type: integer
+                          example: 661702
+                          description: Идентификатор группы сделок (0 — одиночная)
+                        date:
+                          type: integer
+                          format: int64
+                          example: 1759654694
+                          description: Время сделки в формате UNIX (секунды)
+                        price:
+                          type: number
+                          format: float
+                          example: 1.75
+                          description: Цена сделки
+                        volume:
+                          type: integer
+                          example: 30
+                          description: Объём сделки
+                        type:
+                          type: string
+                          enum:
+                            - buy
+                            - sell
+                          example: sell
+                          description: Тип сделки
+                      required:
+                        - id
+                        - group_id
+                        - date
+                        - price
+                        - volume
+                        - type
+                      additionalProperties: false
+                required:
+                  - result
+        '404':
+          description: Handler Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 404
+                  description: Handler Not Found
+        '429':
+          description: Flood control
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 429
+                  description: Flood control
   /{token}/iris_agents:
     parameters:
       - name: token
@@ -3033,7 +3188,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IrisAgentsResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/IrisAgentsResponse'
+                required:
+                  - result
         '401':
           description: Invalid token
           content:
@@ -3092,7 +3252,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LastVersionResponse'
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/LastVersionResponse'
+                required:
+                  - result
         '401':
           description: Invalid token
           content:

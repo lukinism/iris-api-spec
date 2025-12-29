@@ -768,7 +768,7 @@
       "date_add": integer,
       "number": integer,
       "symbol": {
-        "emoji": "🦛",
+        "emoji": string,
         "custom_emoji_id": string,
         "name": string,
         "id": integer,

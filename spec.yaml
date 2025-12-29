@@ -3262,7 +3262,8 @@ paths:
                 type: object
                 properties:
                   result:
-                    $ref: '#/components/schemas/LastVersionResponse'
+                    type: integer
+                    example: 5
                 required:
                   - result
         '401':

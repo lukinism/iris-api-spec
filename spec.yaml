@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
   title: Iris Sweets API
-  version: 0.0.1
+  version: 0.0.5
   description: OpenAPI-схема IRIS API
 servers:
-  - url: https://iris-tg.ru/api/v0.4
+  - url: https://iris-tg.ru/api/v0.5
     description: Основное API (передавайте {token} в пути)
 tags:
   - name: Pocket
@@ -17,6 +17,8 @@ tags:
     description: Торговля и публичные рыночные данные
   - name: Tgstars
     description: Операции с телеграм-звёздами
+  - name: NFT
+    description: Работа с NFT в системе Ириса
   - name: Other
     description: Системные данные Ирис (агенты и т.п.)
 components:
@@ -3302,3 +3304,651 @@ paths:
                 error:
                   code: 429
                   description: Flood control
+  /{token}/nft/give:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - NFT
+      summary: Передать NFT пользователю
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: integer
+                    example: 1
+                required:
+                  - result
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    error:
+                      code: 400
+                      description: Required parameter "{parameter}" is absent
+                invalidUserId:
+                  summary: Неверный user_id
+                  value:
+                    error:
+                      code: 400
+                      description: User is 0 or not a number
+                userDeniedReceiving:
+                  summary: Переводы пользователю запрещены
+                  value:
+                    error:
+                      code: 400
+                      description: User denied receiving
+                commentTooLong:
+                  summary: Комментарий слишком длинный
+                  value:
+                    error:
+                      code: 400
+                      description: Длина текста слишком длинная
+                externalLinks:
+                  summary: Ссылки запрещены
+                  value:
+                    error:
+                      code: 400
+                      description: Ссылки на сторонние сайты в тексте запрещены
+                userMentions:
+                  summary: Обращения к пользователям запрещены
+                  value:
+                    error:
+                      code: 400
+                      description: Обращения к пользователям в тексте запрещены
+          description: ''
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 401
+                  description: Invalid token
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                user_not_found:
+                  summary: User not found
+                  value:
+                    error:
+                      code: 404
+                      description: User not found
+                no_such_bot:
+                  summary: No such bot
+                  value:
+                    error:
+                      code: 404
+                      description: No such bot
+                handler_not_found:
+                  summary: Handler Not Found
+                  value:
+                    error:
+                      code: 404
+                      description: Handler Not Found
+          description: ''
+        '429':
+          description: Flood control
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 429
+                  description: Flood control
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: ID нфт в системе Ириса
+          schema:
+            type: integer
+            minimum: 1
+            example: 123
+        - name: name
+          in: query
+          required: true
+          description: Название гифта из адреса t.me/nft/*. Например, PlusPepe-1
+          schema:
+            type: string
+            example: PlusPepe-1
+        - name: user_id
+          in: query
+          required: true
+          description: Ид юзера, которому передаётся NFT
+          schema:
+            type: integer
+            minimum: 1
+            example: 123456789
+        - name: comment
+          in: query
+          required: false
+          description: Необязательный комментарий
+          schema:
+            type: string
+            example: спасибо
+  /{token}/nft/info:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - NFT
+      summary: Получить информацию о NFT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      number:
+                        type: integer
+                        example: 1
+                      symbol:
+                        type: object
+                        properties:
+                          emoji:
+                            type: string
+                            example: 🎨
+                          custom_emoji_id:
+                            type: string
+                            example: '1234567890'
+                          name:
+                            type: string
+                            example: Symbol Name
+                          id:
+                            type: integer
+                            example: 1
+                          rarity_per_mile:
+                            type: integer
+                            example: 100
+                        required:
+                          - emoji
+                          - custom_emoji_id
+                          - name
+                          - id
+                          - rarity_per_mile
+                      url_name:
+                        type: string
+                        example: PlusPepe-1
+                      background:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: Background Name
+                          id:
+                            type: integer
+                            example: 1
+                          rarity_per_mile:
+                            type: integer
+                            example: 50
+                        required:
+                          - name
+                          - id
+                          - rarity_per_mile
+                      owner_id:
+                        type: integer
+                        example: 123456789
+                      name:
+                        type: string
+                        example: PlusPepe-1
+                      model:
+                        type: object
+                        properties:
+                          emoji:
+                            type: string
+                            example: 🤖
+                          custom_emoji_id:
+                            type: integer
+                            example: 1234567890
+                          name:
+                            type: string
+                            example: Model Name
+                          id:
+                            type: integer
+                            example: 1
+                          rarity_per_mile:
+                            type: integer
+                            example: 200
+                        required:
+                          - emoji
+                          - custom_emoji_id
+                          - name
+                          - id
+                          - rarity_per_mile
+                      id:
+                        type: integer
+                        example: 123
+                    required:
+                      - number
+                      - symbol
+                      - url_name
+                      - background
+                      - owner_id
+                      - name
+                      - model
+                      - id
+                required:
+                  - result
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    error:
+                      code: 400
+                      description: Required parameter "{parameter}" is absent
+          description: ''
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 401
+                  description: Invalid token
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                user_not_found:
+                  summary: User not found
+                  value:
+                    error:
+                      code: 404
+                      description: User not found
+                no_such_bot:
+                  summary: No such bot
+                  value:
+                    error:
+                      code: 404
+                      description: No such bot
+                handler_not_found:
+                  summary: Handler Not Found
+                  value:
+                    error:
+                      code: 404
+                      description: Handler Not Found
+          description: ''
+        '429':
+          description: Flood control
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 429
+                  description: Flood control
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: ID нфт в системе Ириса
+          schema:
+            type: integer
+            minimum: 1
+            example: 123
+        - name: name
+          in: query
+          required: true
+          description: Название гифта из адреса t.me/nft/*. Например, PlusPepe-1
+          schema:
+            type: string
+            example: PlusPepe-1
+  /{token}/nft/list:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - NFT
+      summary: Получить список NFT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date_add:
+                          type: integer
+                          example: 1759543048000
+                        number:
+                          type: integer
+                          example: 1
+                        symbol:
+                          type: object
+                          properties:
+                            emoji:
+                              type: string
+                              example: 🦛
+                            custom_emoji_id:
+                              type: string
+                              example: '1234567890'
+                            name:
+                              type: string
+                              example: Symbol Name
+                            id:
+                              type: integer
+                              example: 1
+                            rarity_per_mile:
+                              type: integer
+                              example: 100
+                          required:
+                            - emoji
+                            - custom_emoji_id
+                            - name
+                            - id
+                            - rarity_per_mile
+                        url_name:
+                          type: string
+                          example: PlusPepe-1
+                        background:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Background Name
+                            id:
+                              type: integer
+                              example: 1
+                            rarity_per_mile:
+                              type: integer
+                              example: 50
+                          required:
+                            - name
+                            - id
+                            - rarity_per_mile
+                        name:
+                          type: string
+                          example: PlusPepe-1
+                        model:
+                          type: object
+                          properties:
+                            emoji:
+                              type: string
+                              example: 🤖
+                            custom_emoji_id:
+                              type: string
+                              example: '1234567890'
+                            name:
+                              type: string
+                              example: Model Name
+                            id:
+                              type: integer
+                              example: 1
+                            rarity_per_mile:
+                              type: integer
+                              example: 200
+                          required:
+                            - emoji
+                            - custom_emoji_id
+                            - name
+                            - id
+                            - rarity_per_mile
+                        id:
+                          type: integer
+                          example: 123
+                      required:
+                        - date_add
+                        - number
+                        - symbol
+                        - url_name
+                        - background
+                        - name
+                        - model
+                        - id
+                required:
+                  - result
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    error:
+                      code: 400
+                      description: Required parameter "{parameter}" is absent
+          description: ''
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 401
+                  description: Invalid token
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                user_not_found:
+                  summary: User not found
+                  value:
+                    error:
+                      code: 404
+                      description: User not found
+                no_such_bot:
+                  summary: No such bot
+                  value:
+                    error:
+                      code: 404
+                      description: No such bot
+                handler_not_found:
+                  summary: Handler Not Found
+                  value:
+                    error:
+                      code: 404
+                      description: Handler Not Found
+          description: ''
+        '429':
+          description: Flood control
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 429
+                  description: Flood control
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Количество записей в ответе
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+        - name: offset
+          in: query
+          required: false
+          description: Вернуть записи, где id ≥ offset
+          schema:
+            type: integer
+            minimum: 0
+            example: 0
+  /{token}/nft/history:
+    parameters:
+      - name: token
+        in: path
+        required: true
+        description: 'Конкатенация: {bot_id}_{iris_token}'
+        schema:
+          type: string
+          example: 12345_abcdEFGH
+    get:
+      tags:
+        - NFT
+      summary: Получить историю NFT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: integer
+                          example: 1759543048000
+                        nft_id:
+                          type: integer
+                          example: 123
+                        id:
+                          type: integer
+                          example: 1
+                        type:
+                          type: string
+                          example: transfer
+                        peer_id:
+                          type: integer
+                          example: 123456789
+                      required:
+                        - date
+                        - nft_id
+                        - id
+                        - type
+                        - peer_id
+                required:
+                  - result
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                requiredParameterAbsent:
+                  summary: Не указан обязательный параметр
+                  value:
+                    error:
+                      code: 400
+                      description: Required parameter "{parameter}" is absent
+          description: ''
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 401
+                  description: Invalid token
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                user_not_found:
+                  summary: User not found
+                  value:
+                    error:
+                      code: 404
+                      description: User not found
+                no_such_bot:
+                  summary: No such bot
+                  value:
+                    error:
+                      code: 404
+                      description: No such bot
+                handler_not_found:
+                  summary: Handler Not Found
+                  value:
+                    error:
+                      code: 404
+                      description: Handler Not Found
+          description: ''
+        '429':
+          description: Flood control
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error:
+                  code: 429
+                  description: Flood control
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Количество записей в ответе
+          schema:
+            type: integer
+            minimum: 1
+            example: 10
+        - name: offset
+          in: query
+          required: false
+          description: Вернуть записи, где id ≥ offset
+          schema:
+            type: integer
+            minimum: 0
+            example: 0

@@ -1,4 +1,4 @@
-# 📘 API Документация Iris. Актуальная версия: 0.4.
+# 📘 API Документация Iris. Актуальная версия: 0.5.
 
 ## 📑 Оглавление
 - [📦 Методы Pocket](#-методы-pocket)
@@ -32,6 +32,11 @@
     - [trade/cancel_part](#tradecancel_part)
     - [trade/orderbook](#tradeorderbook)
     - [trade/deals](#tradedeals)
+- [🖼️ Методы NFT](#-методы-nft)
+    - [nft/give](#nftgive)
+    - [nft/info](#nftinfo)
+    - [nft/list](#nftlist)
+    - [nft/historyh](#nfthistory)
 - [⚙️ Остальные методы](#-остальные-методы)
     - [/iris_agents](#iris_agents)
     - [/last_version](#last_version)
@@ -677,7 +682,145 @@
 }
 ```
 
+---
 
+# 🖼️ Методы NFT
+
+---
+
+## `nft/give`
+
+📤 Структура запроса:
+
+| Параметр | Тип     | Описание                                                      |
+|----------|---------|---------------------------------------------------------------|
+| `id`     | integer | ✅ ID нфт в системе Ириса                                      |
+| `name`   | string  | ✅ Название гифта из адреса t.me/nft/*. Например, `PlusPepe-1` |
+|`user_id`| integer | ✅ Ид юзера, которому передаётся NFT                           |
+|`comment`| string  | 💬 Необязательный комментарий                                 |
+
+💬 Ответ:
+
+```json
+{
+  "result": integer
+}
+```
+
+---
+## `nft/info`
+
+📤 Структура запроса:
+
+| Параметр | Тип     | Описание                                                      |
+|----------|---------|---------------------------------------------------------------|
+| `id`     | integer | ✅ ID нфт в системе Ириса                                      |
+| `name`   | string  | ✅ Название гифта из адреса t.me/nft/*. Например, `PlusPepe-1` |
+
+**💬 Ответ:**
+
+```json
+{
+  "result": {
+    "number": integer,
+    "symbol": {
+      "emoji": string,
+      "custom_emoji_id": string,
+      "name": string,
+      "id": integer,
+      "rarity_per_mile": integer
+    },
+    "url_name": string,
+    "background": {
+      "name": string,
+      "id": integer,
+      "rarity_per_mile": integer
+    },
+    "owner_id": integer,
+    "name": string,
+    "model": {
+      "emoji": string,
+      "custom_emoji_id": integer,
+      "name": string,
+      "id": integer,
+      "rarity_per_mile": integer
+    },
+    "id": integer
+  }
+}
+```
+---
+## `nft/list`
+
+📤 Структура запроса:
+
+| Параметр | Тип     | Описание                             |
+|----------|---------|--------------------------------------|
+| `limit`  | integer | 💬 Количество записей в ответе       |
+| `offset` | integer  | 💬 Вернуть записи, где `id ≥ offset` |
+
+**💬 Ответ:**
+
+```json
+{
+  "result": [
+    {
+      "date_add": integer,
+      "number": integer,
+      "symbol": {
+        "emoji": "🦛",
+        "custom_emoji_id": string,
+        "name": string,
+        "id": integer,
+        "rarity_per_mile": integer
+      },
+      "url_name": string,
+      "background": {
+        "name": string,
+        "id": integer,
+        "rarity_per_mile": integer
+      },
+      "name": string,
+      "model": {
+        "emoji": string,
+        "custom_emoji_id": string,
+        "name": string,
+        "id": integer,
+        "rarity_per_mile": integer
+      },
+      "id": integer
+    }
+  ]
+}
+```
+
+---
+## `nft/history`
+
+📤 Структура запроса:
+
+| Параметр | Тип     | Описание                             |
+|----------|---------|--------------------------------------|
+| `limit`  | integer | 💬 Количество записей в ответе       |
+| `offset` | integer | 💬 Вернуть записи, где `id ≥ offset` |
+
+**💬 Ответ:**
+
+```json
+{
+    "result": [
+        {
+            "date": integer,
+            "nft_id": integer,
+            "id": integer,
+            "type": string,
+            "peer_id": integer
+        }
+    ]
+}
+```
+
+---
 
 # ⚙️ Остальные методы
 
@@ -717,7 +860,7 @@
 **💬 Ответ:**
 ```json
 {
-  "result": "0.4"
+  "result": "0.5"
 }
 ```
 
